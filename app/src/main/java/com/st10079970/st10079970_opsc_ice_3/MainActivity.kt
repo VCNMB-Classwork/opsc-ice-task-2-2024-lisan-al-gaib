@@ -82,7 +82,7 @@ class MainActivity : AppCompatActivity() {
         val recipes = listOf(
             "Green Tea:\n- 1 tsp green tea leaves\n- 1 cup water\nSteep for 3 minutes.",
             "Chamomile Tea:\n- 1 tsp chamomile flowers\n- 1 cup water\nSteep for 5 minutes.",
-            "Ginger Tea:\n- 1 tbsp grated ginger\n- 1 cup water\nBoil for 10 minutes."
+            "Ginger Tea:\n- 1 tbsp grated ginger\n- 1 cup water\nBoil for 10 minutes.",
             "Earl Grey Tea:\n- 1 tsp Earl Grey tea leaves\n- 1 cup water\nSteep for 4 minutes.\nOptional: Add a slice of lemon or a splash of milk.",
             "Peppermint Tea:\n- 1 tsp dried peppermint leaves\n- 1 cup water\nSteep for 5 minutes.\nOptional: Add honey for sweetness.",
             "Lemon Ginger Tea:\n- 1 tbsp grated ginger\n- 1 slice of lemon\n- 1 cup water\nBoil for 10 minutes, then steep for 5 minutes.\nOptional: Add a teaspoon of honey.",
