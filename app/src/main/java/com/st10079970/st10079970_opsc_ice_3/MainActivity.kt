@@ -83,6 +83,14 @@ class MainActivity : AppCompatActivity() {
             "Green Tea:\n- 1 tsp green tea leaves\n- 1 cup water\nSteep for 3 minutes.",
             "Chamomile Tea:\n- 1 tsp chamomile flowers\n- 1 cup water\nSteep for 5 minutes.",
             "Ginger Tea:\n- 1 tbsp grated ginger\n- 1 cup water\nBoil for 10 minutes."
+            "Earl Grey Tea:\n- 1 tsp Earl Grey tea leaves\n- 1 cup water\nSteep for 4 minutes.\nOptional: Add a slice of lemon or a splash of milk.",
+            "Peppermint Tea:\n- 1 tsp dried peppermint leaves\n- 1 cup water\nSteep for 5 minutes.\nOptional: Add honey for sweetness.",
+            "Lemon Ginger Tea:\n- 1 tbsp grated ginger\n- 1 slice of lemon\n- 1 cup water\nBoil for 10 minutes, then steep for 5 minutes.\nOptional: Add a teaspoon of honey.",
+            "Hibiscus Tea:\n- 1 tsp dried hibiscus petals\n- 1 cup water\nSteep for 5 minutes.\nOptional: Add a cinnamon stick for extra flavor.",
+            "Turmeric Tea:\n- 1 tsp turmeric powder\n- 1 pinch black pepper\n- 1 cup water\nBoil for 5 minutes.\nOptional: Add a splash of coconut milk for creaminess.",
+            "Chai Tea:\n- 1 tsp chai tea blend (black tea with spices)\n- 1 cup milk or water\nSimmer for 5 minutes.\nOptional: Sweeten with sugar or honey.",
+            "Rooibos Tea:\n- 1 tsp rooibos tea leaves\n- 1 cup water\nSteep for 5 minutes.\nOptional: Add a dash of vanilla extract.",
+            "Jasmine Tea:\n- 1 tsp jasmine tea leaves\n- 1 cup water\nSteep for 3 minutes.\nOptional: Add a few jasmine flowers for a stronger aroma."
         )
         return recipes.random()
     }
