@@ -24,6 +24,8 @@ class MainActivity : AppCompatActivity() {
     private val REQUEST_CODE_NOTIFICATION_PERMISSION = 1
     private lateinit var notificationDatabaseHelper: NotificationDatabaseHelper
     private lateinit var notificationAdapter: NotificationAdapter
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var notificationRecyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,15 +33,18 @@ class MainActivity : AppCompatActivity() {
 
         // Initialize NotificationDatabaseHelper
         notificationDatabaseHelper = NotificationDatabaseHelper(this)
-
         // Initialize RecyclerView
-        val notificationRecyclerView = findViewById<RecyclerView>(R.id.rvNotificationHistory)
-        notificationRecyclerView.layoutManager = LinearLayoutManager(this)
+        notificationRecyclerView = findViewById(R.id.rvNotificationHistory)
+        val layoutManager = LinearLayoutManager(this)
+        layoutManager.reverseLayout = true // Reverse the order of items
+        layoutManager.stackFromEnd = true // Ensure new items are added at the top
+        notificationRecyclerView.layoutManager = layoutManager
         notificationAdapter = NotificationAdapter(emptyList())
         notificationRecyclerView.adapter = notificationAdapter
+        createNotificationChannel()
 
         // Load notification history on start
-        loadNotificationHistory()
+        //loadNotificationHistory()
 
         // Set up the notification channel
         createNotificationChannel()
