@@ -10,7 +10,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.RadioButton
 import android.widget.RadioGroup
@@ -26,23 +25,22 @@ class MainActivity : AppCompatActivity() {
     private val REQUEST_CODE_NOTIFICATION_PERMISSION = 1
     private lateinit var notificationDatabaseHelper: NotificationDatabaseHelper
     private lateinit var notificationAdapter: NotificationAdapter
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var notificationRecyclerView: RecyclerView
-    private lateinit var teaButton: Button
-    private lateinit var fireButton: Button
-    private lateinit var radioGroupNotif: RadioGroup
-    private lateinit var rdbNotifOn: RadioButton
-    private lateinit var rdbNotifOff: RadioButton
+    private val notificationRecyclerView: RecyclerView by lazy { findViewById(R.id.rvNotificationHistory) }
+    private val teaButton: Button by lazy { findViewById(R.id.btnTeaNotification) }
+    private val fireButton: Button by lazy { findViewById(R.id.btnFirebaseNotification) }
+    private val radioGroupNotif: RadioGroup by lazy { findViewById(R.id.radioGroupNotif) }
+    private val rdbNotifOn: RadioButton by lazy { findViewById(R.id.rdbNotifOn) }
+    private val rdbNotifOff: RadioButton by lazy { findViewById(R.id.rdbNotifOff) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         notificationDatabaseHelper = NotificationDatabaseHelper(this)
-        notificationRecyclerView = findViewById(R.id.rvNotificationHistory)
-        val layoutManager = LinearLayoutManager(this)
-        layoutManager.reverseLayout = true
-        layoutManager.stackFromEnd = true
+        val layoutManager = LinearLayoutManager(this).apply {
+            reverseLayout = true
+            stackFromEnd = true
+        }
         notificationRecyclerView.layoutManager = layoutManager
         notificationAdapter = NotificationAdapter(emptyList())
         notificationRecyclerView.adapter = notificationAdapter
@@ -50,10 +48,6 @@ class MainActivity : AppCompatActivity() {
 
         loadNotificationHistory()
 
-        createNotificationChannel()
-
-        teaButton = findViewById(R.id.btnTeaNotification)
-        fireButton = findViewById(R.id.btnFirebaseNotification)
         teaButton.setOnClickListener {
             if (isNotificationEnabled()) {
                 handleTeaButtonClick()
@@ -64,10 +58,6 @@ class MainActivity : AppCompatActivity() {
                 handleFireButtonClick()
             }
         }
-
-        radioGroupNotif = findViewById(R.id.radioGroupNotif)
-        rdbNotifOn = findViewById(R.id.rdbNotifOn)
-        rdbNotifOff = findViewById(R.id.rdbNotifOff)
 
         radioGroupNotif.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
@@ -95,7 +85,7 @@ class MainActivity : AppCompatActivity() {
         teaButton.isEnabled = true
         fireButton.isEnabled = true
         val sharedPreferences = getSharedPreferences("NotificationPrefs", Context.MODE_PRIVATE)
-        with(sharedPreferences.edit()) {
+        sharedPreferences.edit().apply {
             putBoolean("isNotifEnabled", true)
             apply()
         }
@@ -105,7 +95,7 @@ class MainActivity : AppCompatActivity() {
         teaButton.isEnabled = false
         fireButton.isEnabled = false
         val sharedPreferences = getSharedPreferences("NotificationPrefs", Context.MODE_PRIVATE)
-        with(sharedPreferences.edit()) {
+        sharedPreferences.edit().apply {
             putBoolean("isNotifEnabled", false)
             apply()
         }
@@ -138,7 +128,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun loadNotificationHistory() {
         val notifications = notificationDatabaseHelper.getAllNotifications()
-        Log.d("MainActivity", "Loaded notifications: $notifications")
         notificationAdapter.updateData(notifications)
     }
 

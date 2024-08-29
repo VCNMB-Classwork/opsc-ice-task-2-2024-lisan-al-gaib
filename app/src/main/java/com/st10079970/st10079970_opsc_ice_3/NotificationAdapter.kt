@@ -2,6 +2,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 
 class NotificationAdapter(private var notifications: List<String>) : RecyclerView.Adapter<NotificationAdapter.ViewHolder>() {
@@ -22,7 +23,19 @@ class NotificationAdapter(private var notifications: List<String>) : RecyclerVie
     override fun getItemCount() = notifications.size
 
     fun updateData(newNotifications: List<String>) {
+        val diffCallback = NotificationDiffCallback(notifications, newNotifications)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
         notifications = newNotifications
-        notifyDataSetChanged()
+        diffResult.dispatchUpdatesTo(this)
+    }
+
+    class NotificationDiffCallback(
+        private val oldList: List<String>,
+        private val newList: List<String>
+    ) : DiffUtil.Callback() {
+        override fun getOldListSize() = oldList.size
+        override fun getNewListSize() = newList.size
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int) = oldList[oldItemPosition] == newList[newItemPosition]
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int) = oldList[oldItemPosition] == newList[newItemPosition]
     }
 }

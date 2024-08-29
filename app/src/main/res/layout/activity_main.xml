@@ -17,7 +17,76 @@
 
         <TableRow
             android:layout_width="match_parent"
-            android:layout_height="75dp" />
+            android:layout_height="65dp" />
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="75dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TableRow
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.5">
+
+                    <TextView
+                        android:id="@+id/txtToggleNotif"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:gravity="center"
+                        android:text="Notifications"
+                        android:textAlignment="center"
+                        android:textColor="#000000"
+                        android:textSize="24sp" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.5">
+
+                    <RadioGroup
+                        android:id="@+id/radioGroupNotif"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <RadioButton
+                            android:id="@+id/rdbNotifOn"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_margin="10dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="On"
+                            android:textAlignment="center"
+                            tools:ignore="TouchTargetSizeCheck" />
+
+                        <RadioButton
+                            android:id="@+id/rdbNotifOff"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginRight="20dp"
+                            android:layout_marginBottom="10dp"
+                            android:layout_weight="1"
+                            android:text="Off"
+                            android:textAlignment="center"
+                            tools:ignore="TouchTargetSizeCheck" />
+
+                    </RadioGroup>
+                </TableRow>
+
+            </LinearLayout>
+        </TableRow>
 
         <TableRow
             android:layout_width="match_parent"
@@ -78,7 +147,7 @@
                 android:text="Notification History"
                 android:textAlignment="center"
                 android:textColor="#000000"
-                android:textSize="35sp"
+                android:textSize="30sp"
                 android:textStyle="bold" />
         </TableRow>
 
@@ -92,73 +161,12 @@
                 android:id="@+id/rvNotificationHistory"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="45dp"
                 android:scrollbarStyle="insideInset"
                 android:scrollbars="vertical" />
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="75dp" >
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-
-                <TableRow
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1.5">
-
-                    <TextView
-                        android:id="@+id/txtToggleNotif"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_margin="10dp"
-                        android:gravity="center"
-                        android:text="Notifications"
-                        android:textAlignment="center"
-                        android:textColor="#000000"
-                        android:textSize="31sp" />
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1.5" >
-
-                    <RadioGroup
-                        android:id="@+id/radioGroupNotif"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal">
-
-                        <RadioButton
-                            android:id="@+id/rdbNotifOn"
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:layout_margin="10dp"
-                            android:gravity="center"
-                            android:text="On"
-                            android:textAlignment="center"
-                            tools:ignore="TouchTargetSizeCheck" />
-
-                        <RadioButton
-                            android:id="@+id/rdbNotifOff"
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:layout_margin="10dp"
-                            android:text="Off"
-                            android:textAlignment="center"
-                            tools:ignore="TouchTargetSizeCheck" />
-
-                    </RadioGroup>
-                </TableRow>
-
-            </LinearLayout>
         </TableRow>
 
     </LinearLayout>
