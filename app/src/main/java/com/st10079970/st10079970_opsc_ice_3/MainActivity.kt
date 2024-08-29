@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
@@ -75,9 +76,13 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        if (rdbNotifOn.isChecked) {
+        val sharedPreferences = getSharedPreferences("NotificationPrefs", Context.MODE_PRIVATE)
+        val isNotifEnabled = sharedPreferences.getBoolean("isNotifEnabled", true)
+        if (isNotifEnabled) {
+            rdbNotifOn.isChecked = true
             enableNotifications()
         } else {
+            rdbNotifOff.isChecked = true
             disableNotifications()
         }
     }
@@ -89,11 +94,21 @@ class MainActivity : AppCompatActivity() {
     private fun enableNotifications() {
         teaButton.isEnabled = true
         fireButton.isEnabled = true
+        val sharedPreferences = getSharedPreferences("NotificationPrefs", Context.MODE_PRIVATE)
+        with(sharedPreferences.edit()) {
+            putBoolean("isNotifEnabled", true)
+            apply()
+        }
     }
 
     private fun disableNotifications() {
         teaButton.isEnabled = false
         fireButton.isEnabled = false
+        val sharedPreferences = getSharedPreferences("NotificationPrefs", Context.MODE_PRIVATE)
+        with(sharedPreferences.edit()) {
+            putBoolean("isNotifEnabled", false)
+            apply()
+        }
     }
 
     private fun handleTeaButtonClick() {
@@ -157,7 +172,7 @@ class MainActivity : AppCompatActivity() {
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setCategory(NotificationCompat.CATEGORY_CALL)
             .setFullScreenIntent(fullScreenPendingIntent, true)
-            .setTimeoutAfter(500)
+            .setTimeoutAfter(2000)
 
         with(NotificationManagerCompat.from(this)) {
             notify(1001, builder.build())
