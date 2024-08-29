@@ -10,6 +10,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.RadioButton
 import android.widget.RadioGroup
@@ -19,9 +20,11 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.messaging.FirebaseMessaging
 
 class MainActivity : AppCompatActivity() {
     private val CHANNEL_ID = "tea_channel_id"
+    private val FIREBASE_CHANNEL_ID = "firebase_channel_id"
     private val REQUEST_CODE_NOTIFICATION_PERMISSION = 1
     private lateinit var notificationDatabaseHelper: NotificationDatabaseHelper
     private lateinit var notificationAdapter: NotificationAdapter
@@ -49,14 +52,10 @@ class MainActivity : AppCompatActivity() {
         loadNotificationHistory()
 
         teaButton.setOnClickListener {
-            if (isNotificationEnabled()) {
-                handleTeaButtonClick()
-            }
+            if (isNotificationEnabled()) handleTeaButtonClick()
         }
         fireButton.setOnClickListener {
-            if (isNotificationEnabled()) {
-                handleFireButtonClick()
-            }
+            if (isNotificationEnabled()) handleFireButtonClick()
         }
 
         radioGroupNotif.setOnCheckedChangeListener { _, checkedId ->
@@ -75,11 +74,11 @@ class MainActivity : AppCompatActivity() {
             rdbNotifOff.isChecked = true
             disableNotifications()
         }
+
+        FirebaseMessaging.getInstance().subscribeToTopic("all")
     }
 
-    private fun isNotificationEnabled(): Boolean {
-        return rdbNotifOn.isChecked
-    }
+    private fun isNotificationEnabled() = rdbNotifOn.isChecked
 
     private fun enableNotifications() {
         teaButton.isEnabled = true
@@ -118,6 +117,52 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun handleFireButtonClick() {
+        generateAndDisplayToken()
+    }
+
+    private fun generateAndDisplayToken() {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val token = task.result
+                saveTokenToPreferences(token)
+                sendFirebaseNotification("Firebase Token", token)
+            } else {
+                Log.w("MainActivity", "Fetching FCM registration token failed", task.exception)
+            }
+        }
+    }
+
+    private fun saveTokenToPreferences(token: String) {
+        val sharedPreferences = getSharedPreferences("TokenPrefs", Context.MODE_PRIVATE)
+        sharedPreferences.edit().putString("firebase_token", token).apply()
+    }
+
+    private fun sendFirebaseNotification(title: String, message: String) {
+        val fullScreenIntent = Intent(this, MainActivity::class.java)
+        val fullScreenPendingIntent = PendingIntent.getActivity(this, 0, fullScreenIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+        val copyIntent = Intent(this, NotificationActionReceiver::class.java).apply {
+            action = "COPY_TOKEN"
+            putExtra("token", message)
+        }
+        val copyPendingIntent = PendingIntent.getBroadcast(this, 0, copyIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+        val builder = NotificationCompat.Builder(this, FIREBASE_CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_tea)
+            .setContentTitle(title)
+            .setContentText(message)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(message))
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+            .setFullScreenIntent(fullScreenPendingIntent, true)
+            .addAction(R.drawable.ic_tea, "Copy", copyPendingIntent)
+            .setTimeoutAfter(2000)
+
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
+            with(NotificationManagerCompat.from(this)) {
+                notify(1002, builder.build())
+            }
+        }
     }
 
     private fun addNotificationToDatabase(recipe: String) {
@@ -175,6 +220,11 @@ class MainActivity : AppCompatActivity() {
             }
             val notificationManager: NotificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
+
+            val firebaseChannel = NotificationChannel(FIREBASE_CHANNEL_ID, "Firebase Channel", NotificationManager.IMPORTANCE_HIGH).apply {
+                description = "Channel for Firebase notifications"
+            }
+            notificationManager.createNotificationChannel(firebaseChannel)
         }
     }
 
