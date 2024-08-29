@@ -5,6 +5,8 @@ import NotificationAdapter
 import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -102,12 +104,17 @@ class MainActivity : AppCompatActivity() {
 
     @SuppressLint("MissingPermission")
     private fun sendTeaNotification(recipe: String) {
+        val fullScreenIntent = Intent(this, MainActivity::class.java)
+        val fullScreenPendingIntent = PendingIntent.getActivity(this, 0, fullScreenIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+
         val builder = NotificationCompat.Builder(this, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_tea)
             .setContentTitle("Your Tea Recipe")
             .setContentText(recipe)
             .setStyle(NotificationCompat.BigTextStyle().bigText(recipe))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setCategory(NotificationCompat.CATEGORY_CALL)
+            .setFullScreenIntent(fullScreenPendingIntent, true)
 
         with(NotificationManagerCompat.from(this)) {
             notify(1001, builder.build())
