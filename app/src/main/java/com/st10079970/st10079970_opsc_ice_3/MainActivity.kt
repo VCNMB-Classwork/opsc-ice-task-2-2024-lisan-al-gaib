@@ -1,6 +1,5 @@
 package com.st10079970.st10079970_opsc_ice_3
 
-
 import NotificationAdapter
 import android.annotation.SuppressLint
 import android.app.NotificationChannel
@@ -12,14 +11,14 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import android.widget.RadioButton
+import android.widget.RadioGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlin.random.Random
-
 
 class MainActivity : AppCompatActivity() {
     private val CHANNEL_ID = "tea_channel_id"
@@ -28,34 +27,73 @@ class MainActivity : AppCompatActivity() {
     private lateinit var notificationAdapter: NotificationAdapter
     private lateinit var recyclerView: RecyclerView
     private lateinit var notificationRecyclerView: RecyclerView
+    private lateinit var teaButton: Button
+    private lateinit var fireButton: Button
+    private lateinit var radioGroupNotif: RadioGroup
+    private lateinit var rdbNotifOn: RadioButton
+    private lateinit var rdbNotifOff: RadioButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Initialize NotificationDatabaseHelper
         notificationDatabaseHelper = NotificationDatabaseHelper(this)
-        // Initialize RecyclerView
         notificationRecyclerView = findViewById(R.id.rvNotificationHistory)
         val layoutManager = LinearLayoutManager(this)
-        layoutManager.reverseLayout = true // Reverse the order of items
-        layoutManager.stackFromEnd = true // Ensure new items are added at the top
+        layoutManager.reverseLayout = true
+        layoutManager.stackFromEnd = true
         notificationRecyclerView.layoutManager = layoutManager
         notificationAdapter = NotificationAdapter(emptyList())
         notificationRecyclerView.adapter = notificationAdapter
         createNotificationChannel()
 
-        // Load notification history on start
-        //loadNotificationHistory()
+        loadNotificationHistory()
 
-        // Set up the notification channel
         createNotificationChannel()
 
-        // Set up the button click listener
-        val teaButton: Button = findViewById(R.id.btnTeaNotification)
+        teaButton = findViewById(R.id.btnTeaNotification)
+        fireButton = findViewById(R.id.btnFirebaseNotification)
         teaButton.setOnClickListener {
-            handleTeaButtonClick()
+            if (isNotificationEnabled()) {
+                handleTeaButtonClick()
+            }
         }
+        fireButton.setOnClickListener {
+            if (isNotificationEnabled()) {
+                handleFireButtonClick()
+            }
+        }
+
+        radioGroupNotif = findViewById(R.id.radioGroupNotif)
+        rdbNotifOn = findViewById(R.id.rdbNotifOn)
+        rdbNotifOff = findViewById(R.id.rdbNotifOff)
+
+        radioGroupNotif.setOnCheckedChangeListener { _, checkedId ->
+            when (checkedId) {
+                R.id.rdbNotifOn -> enableNotifications()
+                R.id.rdbNotifOff -> disableNotifications()
+            }
+        }
+
+        if (rdbNotifOn.isChecked) {
+            enableNotifications()
+        } else {
+            disableNotifications()
+        }
+    }
+
+    private fun isNotificationEnabled(): Boolean {
+        return rdbNotifOn.isChecked
+    }
+
+    private fun enableNotifications() {
+        teaButton.isEnabled = true
+        fireButton.isEnabled = true
+    }
+
+    private fun disableNotifications() {
+        teaButton.isEnabled = false
+        fireButton.isEnabled = false
     }
 
     private fun handleTeaButtonClick() {
@@ -74,9 +112,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun handleFireButtonClick() {
+    }
+
     private fun addNotificationToDatabase(recipe: String) {
         notificationDatabaseHelper.addNotification(recipe)
         loadNotificationHistory()
+        scrollToTop()
     }
 
     private fun loadNotificationHistory() {
@@ -115,6 +157,7 @@ class MainActivity : AppCompatActivity() {
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setCategory(NotificationCompat.CATEGORY_CALL)
             .setFullScreenIntent(fullScreenPendingIntent, true)
+            .setTimeoutAfter(500)
 
         with(NotificationManagerCompat.from(this)) {
             notify(1001, builder.build())
@@ -140,5 +183,9 @@ class MainActivity : AppCompatActivity() {
                 addNotificationToDatabase(recipe)
             }
         }
+    }
+
+    private fun scrollToTop() {
+        notificationRecyclerView.scrollToPosition(maxOf(0, notificationAdapter.itemCount - 1))
     }
 }

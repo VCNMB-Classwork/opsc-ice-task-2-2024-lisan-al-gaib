@@ -7,8 +7,8 @@
     tools:context=".MainActivity">
 
     <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -72,12 +72,13 @@
                 android:id="@+id/textView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_margin="10dp"
                 android:elevation="8dp"
                 android:gravity="center"
                 android:text="Notification History"
                 android:textAlignment="center"
                 android:textColor="#000000"
-                android:textSize="16sp"
+                android:textSize="35sp"
                 android:textStyle="bold" />
         </TableRow>
 
@@ -91,7 +92,73 @@
                 android:id="@+id/rvNotificationHistory"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="20dp" />
+                android:layout_margin="20dp"
+                android:scrollbarStyle="insideInset"
+                android:scrollbars="vertical" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="75dp" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TableRow
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.5">
+
+                    <TextView
+                        android:id="@+id/txtToggleNotif"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="10dp"
+                        android:gravity="center"
+                        android:text="Notifications"
+                        android:textAlignment="center"
+                        android:textColor="#000000"
+                        android:textSize="31sp" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.5" >
+
+                    <RadioGroup
+                        android:id="@+id/radioGroupNotif"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <RadioButton
+                            android:id="@+id/rdbNotifOn"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:layout_margin="10dp"
+                            android:gravity="center"
+                            android:text="On"
+                            android:textAlignment="center"
+                            tools:ignore="TouchTargetSizeCheck" />
+
+                        <RadioButton
+                            android:id="@+id/rdbNotifOff"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:layout_margin="10dp"
+                            android:text="Off"
+                            android:textAlignment="center"
+                            tools:ignore="TouchTargetSizeCheck" />
+
+                    </RadioGroup>
+                </TableRow>
+
+            </LinearLayout>
         </TableRow>
 
     </LinearLayout>
